@@ -3,14 +3,14 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </head>
   <body>
     <h1>ポプテピピック3</h1>
     <table border="1">
         <tr>
             <td>
-                 <!-- <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879266/iPhone/sticker_key@2x.png" alt="icon1"></div> -->
-                 <div><a href="#" onclick="imageClick();"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879266/iPhone/sticker_key@2x.png" alt="icon1"></a></div>
+                 <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879266/iPhone/sticker_key@2x.png" alt="icon1" name="stamp"></div>
             </td>
             
             <td>
@@ -46,10 +46,13 @@
         </tr>
      </table>
 
-    <script type="text/javascript">
-        function imageClick() {
-            alert("Clicked image url -> ");
-        }
+    <script>
+        $(function () {
+            $('img[name="stamp"]').on('click', function () {
+                let $url = $(this).attr('src')
+                alert($url);
+            })
+        })
     </script>
         
   </body>
