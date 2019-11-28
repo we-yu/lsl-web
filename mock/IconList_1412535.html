@@ -10,38 +10,38 @@
     <table border="1">
         <tr>
             <td>
-                 <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879266/iPhone/sticker_key@2x.png" alt="icon1" name="stamp"></div>
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879266/iPhone/sticker_key@2x.png" alt="icon1" name="stamp"></div>
             </td>
             
             <td>
-                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879267/iPhone/sticker_key@2x.png" alt="icon2"></div>
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879267/iPhone/sticker_key@2x.png" alt="icon2" name="stamp"></div>
             </td>
 
             <td>
-                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879268/iPhone/sticker_key@2x.png" alt="icon3"></div>
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879268/iPhone/sticker_key@2x.png" alt="icon3" name="stamp"></div>
             </td>
 
             <td>
-                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879269/iPhone/sticker_key@2x.png" alt="icon4"></div>
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879269/iPhone/sticker_key@2x.png" alt="icon4" name="stamp"></div>
             </td>
         </tr>
 
 
         <tr>
             <td>
-                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879270/iPhone/sticker_key@2x.png" alt="icon5"></div>
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879270/iPhone/sticker_key@2x.png" alt="icon5" name="stamp"></div>
             </td>
             
             <td>
-                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879271/iPhone/sticker_key@2x.png" alt="icon6"></div>
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879271/iPhone/sticker_key@2x.png" alt="icon6" name="stamp"></div>
             </td>
 
             <td>
-                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879272/iPhone/sticker_key@2x.png" alt="icon7"></div>
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879272/iPhone/sticker_key@2x.png" alt="icon7" name="stamp"></div>
             </td>
 
             <td>
-                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879273/iPhone/sticker_key@2x.png" alt="icon8"></div>
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/15879273/iPhone/sticker_key@2x.png" alt="icon8" name="stamp"></div>
             </td>
         </tr>
      </table>
@@ -50,7 +50,14 @@
         $(function () {
             $('img[name="stamp"]').on('click', function () {
                 let $url = $(this).attr('src')
-                alert($url);
+
+                var $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val($url).select();
+                document.execCommand("copy");
+                $temp.remove();
+
+                // alert($url);
             })
         })
     </script>
