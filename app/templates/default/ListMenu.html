@@ -1,0 +1,21 @@
+<!-- iconList.html -->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+      <meta charset="UTF-8">
+      <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <p align="center">
+      <input type="radio" name="iconSize" value="LL">L
+      <input type="radio" name="iconSize" value="MM">M
+      <input type="radio" name="iconSize" value="SS" checked="checked">S
+    </p>
+          
+    {% block contents %}{% endblock %}
+
+    <p>{{iconID}}</p>
+  </body>
+</html>
+
+

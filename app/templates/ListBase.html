@@ -1,0 +1,12 @@
+{% extends "./default/ListBase.html" %}
+{% block title%}{% endblock %}
+{% block contents %}
+    <div>
+      {% for iconRow in iconList %}
+      	{% for iconCol in iconRow %}
+		<p>{{iconCol}}</p>
+      	{% endfor %}
+      {% endfor %}
+    </div>
+{% endblock %}
+

@@ -1,0 +1,10 @@
+{% extends "./default/ListMenu.html" %}
+{% block contents %}
+    <ul>
+      {% for menu in menuList %}
+      	<li><a href="IconList_{{menu.id}}.html" target="listArea">{{menu.title}}</a></li>
+      {% endfor %}
+    </ul>
+{% endblock %}
+
+
