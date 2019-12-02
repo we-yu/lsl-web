@@ -3,9 +3,13 @@
 {% block contents %}
     <div>
       {% for iconRow in iconList %}
+        <tr>
       	{% for iconCol in iconRow %}
-		<p>{{iconCol}}</p>
+            <td>
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/{{iconCol}}/iPhone/sticker_key@2x.png" alt="icon{{iconCol}}" name="stamp"></div>
+            </td>
       	{% endfor %}
+        </tr>
       {% endfor %}
     </div>
 {% endblock %}
