@@ -2,7 +2,7 @@
 import sqlite3
 from pprint import pprint
 
-DB_LOCATION = '../db/sqlite/lsl.db'
+DB_LOCATION = '../db/lsl.db'
 
 def create_connection(db_file) :
     try :

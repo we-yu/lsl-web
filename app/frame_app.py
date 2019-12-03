@@ -17,17 +17,21 @@ def Top(id = None):
 
 @app.route('/ListMenu.html')
 def ListMenu(nameTxt = None):
-    sticker_infos =  [
-                {"id":"1206683", "title":"Poputepipick"},
-                {"id":"1252985", "title":"Poputepipick 2"},
-                {"id":"1412535", "title":"Poputepipick 3"}
-            ]
+    sticker_infos = ctrlMng.GetParentIDs()
+    # print(sticker_infos)
+    # sticker_infos =  [
+    #             {"id":"1206683", "title":"Poputepipick"},
+    #             {"id":"1252985", "title":"Poputepipick 2"},
+    #             {"id":"1412535", "title":"Poputepipick 3"}
+    #         ]
+    # print(sticker_infos)
+
     return render_template('ListMenu.html', menuList=sticker_infos)
 
 @app.route('/IconList_<int:id>.html')
 def IdSet(id = None):
-    titleTxt="Lorem"
     parentID = int(id)
+    titleTxt = int(id)
 
     sticker_details = ctrlMng.GetLocalIDs(parentID)
     print(sticker_details)
