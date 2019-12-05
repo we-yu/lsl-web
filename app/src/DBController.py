@@ -45,11 +45,14 @@ class DBCtrl:
         return con
 
     def Create(self, query, data=None, type=None):
+        co, cr = self.GetConnectCursor()
         if type == 'many':
-            dbResult = self.cursor.executemany(query, data)
+            dbResult = cr.executemany(query, data)
         else:
-            dbResult = self.cursor.execute(query)
-        self.con.commit()
+            dbResult = cr.execute(query)
+        co.commit()
+        co.close()
+
         return dbResult
 
     def Read(self, query, type=None):
@@ -63,6 +66,7 @@ class DBCtrl:
             dbResult = int(dbResult[0])
         else:
             dbResult = cr.fetchall()
+        co.close()
 
         return dbResult
 

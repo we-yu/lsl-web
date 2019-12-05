@@ -2,7 +2,10 @@ import DBController
 import IconScraper
 import re # 正規表現
 
+from pprint import pprint
+
 class ControlManager:
+    STICKER_FIXED_URL = 'https://store.line.me/stickershop/product/%s/en'
 
     @property
     def instances(self):
@@ -77,6 +80,46 @@ class ControlManager:
         query = 'SELECT count(id) FROM sticker_list WHERE id=%s' % parentID
         result = self.objects['dbCtrl'].Read(query, 'count')
         return True if result == 1 else False
+
+    def CookYummySoup(self, parentID):
+        # Make target url from fixed url + input parent ID
+        tgtStiUrl = self.STICKER_FIXED_URL % parentID
+        # Make scraper object. Same time, Do scraping. This is only 1 time per object.
+        self.objects = ('scrp', self.instances['scrp'](tgtStiUrl))
+        scraper = self.objects['scrp']
+
+        # Check this URL is available or not.
+        isValid = scraper.IsVaild()
+
+        # iconInfos =
+        # LocalID   {'id': '121193446',
+        # L size     'staticUrl': 'https://stickershop.line-scdn.net/stickershop/v1/sticker/121193446/iPhone/sticker@2x.png',
+        # M size     'fbStaticUrl': 'https://stickershop.line-scdn.net/stickershop/v1/sticker/121193446/android/sticker.png',
+        # S size     'backGroundUrl': 'https://stickershop.line-scdn.net/stickershop/v1/sticker/121193446/iPhone/sticker_key@2x.png'},
+        if (isValid == True) :
+
+            vals4list = [parentID, tgtStiUrl, scraper.GetStickerTitle(), ""]
+            vals4detail = []
+            print("vals4list = ", vals4list)
+
+            iconInfos = scraper.GetAllIconURL()
+
+            for iconInfo in iconInfos :
+                val4detail = (parentID, iconInfo['id'], iconInfo['staticUrl'], iconInfo['fbStaticUrl'], iconInfo['backGroundUrl'])
+                vals4detail.append(val4detail)
+            pprint(vals4detail[0])
+            pprint(vals4detail[1])
+            pprint(vals4detail[2])
+
+            query = 'INSERT INTO sticker_list VALUES(%s, \'%s\', \'%s\', \'%s\')' % (vals4list[0], vals4list[1], vals4list[2], vals4list[3])
+            self.objects['dbCtrl'].Create(query)
+            query = 'INSERT INTO sticker_detail VALUES (?, ?, ?, ?, ?)'
+            self.objects['dbCtrl'].Create(query, vals4detail, 'many')
+
+
+            # print(iconInfos)
+
+        return parentID
 
     # Check that sticker URL is available one.
     def IsAvailableSticker(self, parentID):

@@ -18,10 +18,11 @@ def Top(id = None):
     if request.method == 'POST' :
         result = request.form
         receivedTxt = str(result["url_post_text"])
-
         if ctrlMng.IsNumeric(receivedTxt) == True :
             exist = ctrlMng.IsAlreadyInDB(int(receivedTxt))
-            print(exist)
+            if exist == False :
+                stickerID = receivedTxt
+                vaild = ctrlMng.CookYummySoup(stickerID)
         else :
             receivedTxt = "<font color=\"red\"><b>%s</b> is invalid. Allow only numeric.</font>" % (receivedTxt)
 
