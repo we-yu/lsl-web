@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+
 import sys
 sys.path.append('src/')
 import ControlManager
@@ -11,21 +12,18 @@ ctrlMng = ControlManager.ControlManager()
 def FrameSet(id = None):
     return render_template('FrameSet.html')
 
-@app.route('/Top.html')
+@app.route('/Top.html', methods = ['GET', 'POST'])
 def Top(id = None):
-    return render_template('Top.html')
+    receivedTxt = ""
+    if request.method == 'POST' :
+        result = request.form
+        receivedTxt = str(result["url_post_text"])
+
+    return render_template('Top.html', responseMessage=receivedTxt)
 
 @app.route('/ListMenu.html')
 def ListMenu(nameTxt = None):
     sticker_infos = ctrlMng.GetParentIDs()
-    # print(sticker_infos)
-    # sticker_infos =  [
-    #             {"id":"1206683", "title":"Poputepipick"},
-    #             {"id":"1252985", "title":"Poputepipick 2"},
-    #             {"id":"1412535", "title":"Poputepipick 3"}
-    #         ]
-    # print(sticker_infos)
-
     return render_template('ListMenu.html', menuList=sticker_infos)
 
 @app.route('/IconList_<int:id>.html')
@@ -40,5 +38,3 @@ def IdSet(id = None):
 
 if __name__ == "__main__":  # 実行されたら
     app.run(debug=True, host='0.0.0.0', port=5001, threaded=True)
-
-

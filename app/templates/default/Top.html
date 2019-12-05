@@ -1,0 +1,24 @@
+<!-- iconList.html -->
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="static/js/script.js"></script>
+        <link rel="stylesheet" type="text/css" href="static/css/style.css">
+    </head>
+    <body>
+        <h1>How to use</h1>
+        <div>
+            <p>{% block helps %}{% endblock %}</p>
+        </div>
+        <hr>
+        <div>
+            {% block inputform %}{% endblock %}
+        </div>
+        <hr>
+        <div>
+            {% block responses %}{% endblock %}
+        </div>
+    </body>
+</html>
