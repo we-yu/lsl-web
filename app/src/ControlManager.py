@@ -1,4 +1,6 @@
 import DBController
+import IconScraper
+import re # 正規表現
 
 class ControlManager:
 
@@ -24,7 +26,10 @@ class ControlManager:
         print('Call ' + self.__class__.__name__ + ' Constructor')
         self.__instances    = {}
         self.__objects      = {}
-        self.instances  = ('dbCtrl', DBController.DBCtrl)
+
+        self.instances  = ('dbCtrl',    DBController.DBCtrl)
+        self.instances  = ('scrp',      IconScraper.IconScraper)
+
         self.objects    = ('dbCtrl', self.instances['dbCtrl']())
 
     def GetParentIDs(self):
@@ -61,3 +66,21 @@ class ControlManager:
                 child_list = []
 
         return localid_list
+
+    # To new register, Input sticker-ID.
+    # https://store.line.me/stickershop/product/1206683/en => 1206683 is sticker-ID
+    def IsNumeric(self, val):
+        return re.match(r"^\d+$", val) is not None
+
+    # Check that Sticker already downloaded and registered in DB
+    def IsAlreadyInDB(self, parentID):
+        query = 'SELECT count(id) FROM sticker_list WHERE id=%s' % parentID
+        result = self.objects['dbCtrl'].Read(query, 'count')
+        return True if result == 1 else False
+
+    # Check that sticker URL is available one.
+    def IsAvailableSticker(self, parentID):
+        return parentID
+    # If all fine, Target sticker register to DBs.
+    def RegisterNewSticker2DB(self, parentID):
+        return parentID

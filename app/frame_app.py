@@ -19,6 +19,12 @@ def Top(id = None):
         result = request.form
         receivedTxt = str(result["url_post_text"])
 
+        if ctrlMng.IsNumeric(receivedTxt) == True :
+            exist = ctrlMng.IsAlreadyInDB(int(receivedTxt))
+            print(exist)
+        else :
+            receivedTxt = "<font color=\"red\"><b>%s</b> is invalid. Allow only numeric.</font>" % (receivedTxt)
+
     return render_template('Top.html', responseMessage=receivedTxt)
 
 @app.route('/ListMenu.html')
