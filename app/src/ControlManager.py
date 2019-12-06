@@ -39,7 +39,7 @@ class ControlManager:
         parentIDs = []
 
         # Execute query, Get all parentIDs from table
-        query = 'SELECT id, title FROM sticker_list'
+        query = 'SELECT id, title FROM sticker_list ORDER BY title'
         result = self.objects['dbCtrl'].Read(query)
 
         # Loop executed result. Make list of {id, title} dictionaries.
@@ -53,7 +53,7 @@ class ControlManager:
 
     def GetLocalIDs(self, parentID):
         # Execute query. Get all of "local id" from "detail" table.
-        query = 'SELECT local_id FROM sticker_detail WHERE parent_id=%s' % (parentID)
+        query = 'SELECT local_id FROM sticker_detail WHERE parent_id=%s ORDER BY local_id' % (parentID)
         result = self.objects['dbCtrl'].Read(query)
 
         # Make list in list. Every 4 times change line.
