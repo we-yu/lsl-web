@@ -31,6 +31,7 @@ def Top(id = None):
 @app.route('/ListMenu.html')
 def ListMenu(nameTxt = None):
     sticker_infos = ctrlMng.GetParentIDs()
+    sticker_infos = ctrlMng.InsertAccordionLine(sticker_infos)
     return render_template('ListMenu.html', menuList=sticker_infos)
 
 @app.route('/IconList_<int:id>.html')

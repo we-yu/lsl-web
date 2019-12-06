@@ -1,6 +1,10 @@
 import DBController
 import IconScraper
+
+import string
 import re # 正規表現
+from pprint import pprint
+
 
 from pprint import pprint
 
@@ -47,9 +51,39 @@ class ControlManager:
             stinfo = {}
             stinfo["id"] = sticker[0]
             stinfo["title"] = sticker[1]
+            stinfo["class"] = ""
             parentIDs.append(stinfo)
 
         return parentIDs
+
+    def InsertAccordionLine(self, stlist):
+
+        initial = 'a'
+        newStList = []
+        alphabetCount = 0
+        c = str(string.ascii_lowercase[alphabetCount])
+        for line in stlist :
+            t = line['title'][0]
+
+            if (str.isdecimal(t)) :
+                continue
+
+            t = t.lower()
+            c = c.lower()
+
+            while (t != c):
+                newStList.append(accLine)
+                accLine = {'id':-1, 'title':str(string.ascii_lowercase[alphabetCount]), 'class':'accordion'}
+                alphabetCount += 1
+                if(alphabetCount == 26) :
+                    break
+                print("a count = ", alphabetCount, t, c)
+                c = str(string.ascii_lowercase[alphabetCount]).lower()
+
+            newStList.append(line)
+
+        pprint(newStList)
+        return newStList
 
     def GetLocalIDs(self, parentID):
         # Execute query. Get all of "local id" from "detail" table.
