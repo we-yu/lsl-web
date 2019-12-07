@@ -34,3 +34,11 @@ input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
 
+.accordion {
+    cursor: pointer;
+}
+
+.accordion + ul {
+    display: none;
+}
+

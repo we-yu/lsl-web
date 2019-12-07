@@ -56,31 +56,49 @@ class ControlManager:
 
         return parentIDs
 
+    # メニュー用辞書リストの適切な位置にアコーディオン用の列を挿入する。
+    # リスト自体はORDER BY titleで取得しているため、英数字→a-zの順番にはすでになっている。
     def InsertAccordionLine(self, stlist):
 
-        initial = 'a'
-        newStList = []
-        alphabetCount = 0
-        c = str(string.ascii_lowercase[alphabetCount])
-        for line in stlist :
-            t = line['title'][0]
+        menuIdx = 0         # メニューリストをたどるIndex
+        numMarkList = []    # 頭文字英数字のものはこちらへ移動
+        newStList = []      # 適当にAccordionを入れた新メニューリスト
 
-            if (str.isdecimal(t)) :
-                continue
+        # 頭文字英数字のものはいったん別リストへ退避
+        alphaReg = re.compile(r'^[a-zA-Z]+$')
+        while not alphaReg.match(stlist[0]['title'][0]) :
+            numMarkList.append(stlist.pop(0))
 
-            t = t.lower()
-            c = c.lower()
+        # a-zの文字列を基準にループを回す
+        for alp in string.ascii_lowercase :
+            # まずは現在のアルファベットでaccordion用要素を作る
+            accLine = {'id': -1, 'title': alp, 'class': 'accordion-start'}
+            newStList.append(accLine)
 
-            while (t != c):
-                newStList.append(accLine)
-                accLine = {'id':-1, 'title':str(string.ascii_lowercase[alphabetCount]), 'class':'accordion'}
-                alphabetCount += 1
-                if(alphabetCount == 26) :
-                    break
-                print("a count = ", alphabetCount, t, c)
-                c = str(string.ascii_lowercase[alphabetCount]).lower()
+            lastIdx = menuIdx
+            # メニュー用Indexがメニュー配列を超えていない・かつ現在参照しているメニュー要素の文字列が現在アルファベットと同じ限りループを回す
+            while ((menuIdx < len(stlist)) and (alp == stlist[menuIdx]['title'][0].lower())) :
+                # 当該要素を新メニューリストへ挿入し、参照用Indexを一つすすめる。
+                newStList.append(stlist[menuIdx])
+                menuIdx += 1
 
-            newStList.append(line)
+            accLine = {'id': -1, 'title': alp, 'class': 'accordion-end'}
+            newStList.append(accLine)
+
+            # If nothing any menu read, delete accordion start/end line.
+            if(lastIdx == menuIdx) :
+                newStList.pop(len(newStList) - 1)
+                newStList.pop(len(newStList) - 1)
+
+        # 新メニューリストの後ろへ英数字用のAccordionと要素を連結する。
+        if (len(numMarkList) != 0) :
+            accLine = {'id': -1, 'title': "Numbers & Other", 'class': 'accordion-start'}
+            newStList.append(accLine)
+
+            newStList.extend(numMarkList)
+
+            accLine = {'id': -1, 'title': "", 'class': 'accordion-end'}
+            newStList.append(accLine)
 
         pprint(newStList)
         return newStList
@@ -150,14 +168,4 @@ class ControlManager:
             query = 'INSERT INTO sticker_detail VALUES (?, ?, ?, ?, ?)'
             self.objects['dbCtrl'].Create(query, vals4detail, 'many')
 
-
-            # print(iconInfos)
-
-        return parentID
-
-    # Check that sticker URL is available one.
-    def IsAvailableSticker(self, parentID):
-        return parentID
-    # If all fine, Target sticker register to DBs.
-    def RegisterNewSticker2DB(self, parentID):
         return parentID

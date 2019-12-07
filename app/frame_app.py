@@ -23,6 +23,9 @@ def Top(id = None):
             if exist == False :
                 stickerID = receivedTxt
                 vaild = ctrlMng.CookYummySoup(stickerID)
+            else:
+                receivedTxt = "<font color=\"red\"><b>%s</b> is already in DB.</font>" % (receivedTxt)
+
         else :
             receivedTxt = "<font color=\"red\"><b>%s</b> is invalid. Allow only numeric.</font>" % (receivedTxt)
 
@@ -40,7 +43,6 @@ def IdSet(id = None):
     titleTxt = int(id)
 
     sticker_details = ctrlMng.GetLocalIDs(parentID)
-    print(sticker_details)
 
     return render_template('ListBase.html', title=titleTxt, iconList=sticker_details)
 
