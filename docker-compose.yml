@@ -1,11 +1,61 @@
 version: '3.3'
 
 services:
-  webapi:
-    build: ./flask
-    tty: true
-    ports:
-      - "5010:5001"
-    volumes:
-      - ./app:/app
-    restart: always
+ web:
+   container_name: "lsl-flask"
+   build: ./flask
+   tty: true
+   volumes:
+     - ./app:/app
+   ports:
+     - "5010:5001"
+   restart: always
+
+ db:
+   image: mariadb:latest
+   container_name: "lsl-db"
+   volumes:
+     - ./db:/var/lib/mysql
+     - ./initdb.d:/docker-entrypoint-initdb.d
+   ports:
+     - "3326:3306"
+   env_file: .env
+   restart: always
+
+ api:
+   container_name: "lsl-api"
+   build: ./node
+   restart: unless-stopped
+   volumes:
+     - ./app/node:/app/node
+   working_dir: /app/node
+   ports:
+     - "3021:3000"
+   command: sh -c "npm install -g pm2 && npm install && pm2-runtime app.js --watch"
+
+ phpmyadmin:
+   image: phpmyadmin/phpmyadmin
+   container_name: "lsl-db-admin"
+#  env_file: .env
+   environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=myrtpassword
+#   links:
+#     - db:mysql
+   ports:
+     - 8088:80
+   depends_on:
+     - db
+   volumes:
+     - ./phpmyadmin/sessions:/sessions
+
+#  webflask:
+#    build: ./flask
+#    tty: true
+#    ports:
+#      - "5010:5001"
+#    volumes:
+#      - ./app:/app
+#    restart: always
