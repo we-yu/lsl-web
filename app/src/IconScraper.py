@@ -124,6 +124,8 @@ class IconScraper :
     def GetStickerTitle(self) :
         title = self.soup.select('p.mdCMN38Item01Ttl')
         title = title[0].getText()
+        title = title.replace("'", "''")
+        title = title.replace('"', '\"')
         return title
 
 

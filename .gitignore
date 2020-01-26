@@ -103,6 +103,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-.db
+*.db
+db/
 app/node/
 node/
