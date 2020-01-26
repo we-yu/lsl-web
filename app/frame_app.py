@@ -4,6 +4,8 @@ import sys
 sys.path.append('src/')
 import ControlManager
 
+import pprint as pp
+
 app = Flask(__name__)
 
 ctrlMng = ControlManager.ControlManager()
@@ -40,9 +42,11 @@ def ListMenu(nameTxt = None):
 @app.route('/IconList_<int:id>.html')
 def IdSet(id = None):
     parentID = int(id)
-    titleTxt = int(id)
+    titleTxt = ctrlMng.GetStickerTitle(parentID)
 
     sticker_details = ctrlMng.GetLocalIDs(parentID)
+
+    pp.pprint(sticker_details)
 
     return render_template('ListBase.html', title=titleTxt, iconList=sticker_details)
 

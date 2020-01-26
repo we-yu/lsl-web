@@ -169,3 +169,8 @@ class ControlManager:
             self.objects['dbCtrl'].Create(query, vals4detail, 'many')
 
         return parentID
+
+    def GetStickerTitle(self, parentID):
+        query = 'SELECT title FROM sticker_list WHERE id = %s' % parentID
+        titleTxt = self.objects['dbCtrl'].Read(query)
+        return titleTxt[0][0]
