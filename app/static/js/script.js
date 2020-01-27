@@ -1,4 +1,5 @@
 $(function () {
+    // When sticker clicked, copy that image url to clipboard
     $('img[name="stamp"]').on('click', function () {
         let $url = $(this).attr('src')
 
@@ -10,13 +11,12 @@ $(function () {
         // alert($url);
     });
 
+    // Succeeded to load new sticker
 
     //.accordion1の中のp要素がクリックされたら
-	$('.accordion').click(function(){
-
-		//クリックされた.accordion1の中のp要素に隣接するul要素が開いたり閉じたりする。
-		$(this).next('ul').slideToggle();
-
-	});
+    $('.accordion').click(function(){
+        //クリックされた.accordion1の中のp要素に隣接するul要素が開いたり閉じたりする。
+        $(this).next('ul').slideToggle();
+    });
 
 })

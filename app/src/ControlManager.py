@@ -143,6 +143,9 @@ class ControlManager:
         # Check this URL is available or not.
         isValid = scraper.IsVaild()
 
+        # Optional messages to return
+        optMsg = ""
+
         # iconInfos =
         # LocalID   {'id': '121193446',
         # L size     'staticUrl': 'https://stickershop.line-scdn.net/stickershop/v1/sticker/121193446/iPhone/sticker@2x.png',
@@ -168,7 +171,9 @@ class ControlManager:
             query = 'INSERT INTO sticker_detail VALUES (?, ?, ?, ?, ?)'
             self.objects['dbCtrl'].Create(query, vals4detail, 'many')
 
-        return parentID
+            optMsg = vals4list[2]
+
+        return isValid, optMsg
 
     def GetStickerTitle(self, parentID):
         query = 'SELECT title FROM sticker_list WHERE id = %s' % parentID

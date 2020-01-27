@@ -24,7 +24,12 @@ def Top(id = None):
             exist = ctrlMng.IsAlreadyInDB(int(receivedTxt))
             if exist == False :
                 stickerID = receivedTxt
-                vaild = ctrlMng.CookYummySoup(stickerID)
+                valid, msg = ctrlMng.CookYummySoup(stickerID)
+                if valid == True :
+                    receivedTxt = msg + " / " + receivedTxt
+                    receivedTxt = "<font color=\"blue\">Sticker [<b>%s</b>] succeeded to fetching</font>" % (receivedTxt)
+                else :
+                    receivedTxt = "<font color=\"red\">Sticker <b>%s</b> could not found.</font>" % (receivedTxt)
             else:
                 receivedTxt = "<font color=\"red\"><b>%s</b> is already in DB.</font>" % (receivedTxt)
 
