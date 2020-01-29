@@ -1,0 +1,17 @@
+{% extends "./default/ListBase.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block contents %}
+    <div>
+      {% for iconRow in iconList %}
+        <tr>
+      	{% for iconCol in iconRow %}
+            <td>
+		    <!-- <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/{{iconCol}}/iPhone/sticker_key@2x.png" alt="icon{{iconCol}}" name="stamp"></div> -->
+                <div><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/{{iconCol}}/android/sticker.png" alt="icon{{iconCol}}" name="stamp" width="128"></div>
+            </td>
+      	{% endfor %}
+        </tr>
+      {% endfor %}
+    </div>
+{% endblock %}
+

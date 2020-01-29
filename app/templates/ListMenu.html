@@ -1,0 +1,16 @@
+{% extends "./default/ListMenu.html" %}
+{% block contents %}
+    {% for menu in menuList %}
+        {% if menu.class == "accordion-start" %}
+            <div class="accordion">{{menu.title}}</div>
+                <ul>
+        {% elif menu.class == "accordion-end" %}
+            </ul>
+        {% else %}
+            <!--<div><a href="IconList_{{menu.id}}.html" target="listArea">{{menu.title}}</a></div>-->
+            <li><a href="IconList_{{menu.id}}.html" target="listArea">{{menu.title}}</a></li>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+

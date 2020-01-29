@@ -1,0 +1,55 @@
+version: '3.3'
+
+services:
+ web:
+   container_name: "lsl-flask"
+   build: ./flask
+   tty: true
+   volumes:
+     - ./app:/app
+   ports:
+     - "5010:5001"
+   environment:
+     VIRTUAL_HOST: lsl.mimizuku.dev
+     LETSENCRYPT_HOST: lsl.mimizuku.dev
+     LETSENCRYPT_EMAIL: whiterythronium@gmail.com
+   restart: always
+
+ db:
+   image: mariadb:latest
+   container_name: "lsl-db"
+   volumes:
+     - ./db:/var/lib/mysql
+     - ./initdb.d:/docker-entrypoint-initdb.d
+   ports:
+     - "3326:3306"
+   environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+
+ api:
+   container_name: "lsl-api"
+   build: ./node
+   restart: unless-stopped
+   volumes:
+     - ./app/node:/app/node
+   working_dir: /app/node
+   ports:
+     - "3021:3000"
+   command: sh -c "npm install -g pm2 && npm install && pm2-runtime app.js --watch"
+
+ phpmyadmin:
+   image: phpmyadmin/phpmyadmin
+   container_name: "lsl-db-admin"
+   links:
+     - db
+   ports:
+     - 8088:80
+#   depends_on:
+#     - db
+   volumes:
+     - ./phpmyadmin/sessions:/sessions
+
+networks:
+  default:
+    external:
+      name: common_link
