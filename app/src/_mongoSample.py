@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 import datetime
 
-client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb', 27117)
 
 # Get DB "test_database" from MongoDB / Create DB on MongoDB if not found
 db = client.test_database
@@ -10,6 +10,9 @@ db = client.test_database
 # Call collection / Create if nothing
 collection = db.test_collection
 # collection = db['test_collection']
+
+# Drop(Delete) all records
+collection.drop()
 
 # json style document
 post = {
@@ -20,7 +23,7 @@ post = {
 }
 
 # Insert document to collection
-result1 = collection.insert_one(post)
+# result1 = collection.insert_one(post)
 
 # In case of multiple insert
 # new_posts = [{"author": "Mike",

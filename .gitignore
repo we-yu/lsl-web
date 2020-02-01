@@ -105,5 +105,6 @@ venv.bak/
 
 *.db
 db/
+mariadb/
 app/node/
 node/

@@ -15,16 +15,16 @@ services:
      LETSENCRYPT_EMAIL: whiterythronium@gmail.com
    restart: always
 
- db:
+ mariadb:
    image: mariadb:latest
-   container_name: "lsl-db"
+   container_name: "lsl-mariadb"
    volumes:
-     - ./db:/var/lib/mysql
+     - ./mariadb:/var/lib/mysql
      - ./initdb.d:/docker-entrypoint-initdb.d
    ports:
      - "3326:3306"
    environment:
-      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_ROOT_PASSWORD=rootpasswd
 
  api:
    container_name: "lsl-api"
@@ -39,15 +39,27 @@ services:
 
  phpmyadmin:
    image: phpmyadmin/phpmyadmin
-   container_name: "lsl-db-admin"
+   container_name: "lsl-mariadb-admin"
    links:
-     - db
+     - mariadb
    ports:
      - 8088:80
 #   depends_on:
-#     - db
+#     - mariadb
    volumes:
      - ./phpmyadmin/sessions:/sessions
+
+ mongodb:
+  image: mongo
+  restart: always
+  environment:
+    MONGO_INITDB_ROOT_USERNAME: mongoDBRoot
+    MONGO_INITDB_ROOT_PASSWORD: mongoDBPasswd
+  ports:
+  - 27117:27017
+  volumes:
+  - ./mongo/db:/data/db
+  - ./mongo/configdb:/data/configdb
 
 networks:
   default:
