@@ -2,11 +2,17 @@ import os
 from pymongo import MongoClient
 import datetime
 import urllib.parse
+import setting # For enviroment load
 
 import sqlite3
 from pprint import pprint
 
 DB_LOCATION = '../db/lsl.db'
+DB_USER = setting.mongoUser
+DB_PASS = setting.mongoPass
+
+print("Setting.DB_USER :", DB_USER)
+print("Setting.DB_PASS :", DB_PASS)
 
 # RDB       MongoDB
 # database  database
@@ -20,8 +26,8 @@ DB_LOCATION = '../db/lsl.db'
 
 def GetMongoDBClient():
     mongoPath = "mongodb://mongo:27017/"
-    mongoUsr = "mongoDBRoot"
-    mongoPass = "mongoDBPasswd"
+    mongoUsr = DB_USER
+    mongoPass = DB_PASS
     mongoUsr = urllib.parse.quote_plus(mongoUsr)
     mongoPass = urllib.parse.quote_plus(mongoPass)
     accessor = "mongodb://%s:%s@mongo:27017/" % (mongoUsr, mongoPass)
