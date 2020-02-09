@@ -9,10 +9,13 @@ services:
      - ./app:/app
    ports:
      - "5010:5001"
+#   env_file: .env
    environment:
      VIRTUAL_HOST: lsl.mimizuku.dev
      LETSENCRYPT_HOST: lsl.mimizuku.dev
      LETSENCRYPT_EMAIL: whiterythronium@gmail.com
+   depends_on:
+     - mongo # for connection of mongoDB
    restart: always
 
  mariadb:
@@ -23,8 +26,9 @@ services:
      - ./initdb.d:/docker-entrypoint-initdb.d
    ports:
      - "3326:3306"
-   environment:
-      - MYSQL_ROOT_PASSWORD=rootpasswd
+   env_file: .env
+#   environment:
+#      - MYSQL_ROOT_PASSWORD=rootpasswd
 
  api:
    container_name: "lsl-api"
@@ -49,19 +53,36 @@ services:
    volumes:
      - ./phpmyadmin/sessions:/sessions
 
- mongodb:
-  image: mongo
-  restart: always
-  environment:
+ mongo:
+   image: 'mongo:latest'
+   container_name: "lsl-mongoDB"
+#   env_file: .env
+   environment:
     MONGO_INITDB_ROOT_USERNAME: mongoDBRoot
     MONGO_INITDB_ROOT_PASSWORD: mongoDBPasswd
-  ports:
-  - 27117:27017
-  volumes:
-  - ./mongo/db:/data/db
-  - ./mongo/configdb:/data/configdb
+   ports:
+    - '27017:27017'
+   volumes:
+    - 'mongodb-data:/data/db'
+#   command: mongod --port 27017
+
+# mongodb:
+#  container_name: "lsl-monbodb"
+#  image: mongo
+#  restart: always
+#  environment:
+#    MONGO_INITDB_ROOT_USERNAME: mongoDBRoot
+#    MONGO_INITDB_ROOT_PASSWORD: mongoDBPasswd
+#  ports:
+#  - 27017:27017
+#  volumes:
+#  - ./mongo/db:/data/db
+#  - ./mongo/configdb:/data/configdb
 
 networks:
   default:
     external:
       name: common_link
+
+volumes:
+  mongodb-data: {}

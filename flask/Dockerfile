@@ -21,5 +21,5 @@ RUN pip install flask \
                 requests \
                 bs4
 # execute at "docker run"
-#CMD ["python", "frame_app.py"]
+CMD ["python", "frame_app.py"]
 # ABCDEF
