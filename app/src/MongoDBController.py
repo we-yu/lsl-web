@@ -9,7 +9,6 @@ DB_PASS = setting.mongoPass
 
 print("Kicked Mongo Ctrl", DB_USER, DB_PASS)
 
-
 class MongoDBController :
     @property
     def mongoClient(self):
@@ -47,6 +46,8 @@ class MongoDBController :
     def MongoDBFetchTest(self):
         dbName = "lslMongoDB"
         tableName = "sticker_list"
+
+        print(dbName, tableName)
 
         lslClient   = self.mongoClient
         lsldb       = lslClient[dbName]

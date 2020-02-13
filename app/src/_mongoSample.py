@@ -31,7 +31,7 @@ def GetMongoDBClient():
     mongoUsr = urllib.parse.quote_plus(mongoUsr)
     mongoPass = urllib.parse.quote_plus(mongoPass)
     accessor = "mongodb://%s:%s@mongo:27017/" % (mongoUsr, mongoPass)
-    # print("accessor = " + accessor)
+    print("accessor = " + accessor)
 
     client = MongoClient(accessor)
 
@@ -58,7 +58,7 @@ def MongoDBConnectionTest():
     # collection = db['test_collection']
 
     # Drop(Delete) all records
-    collection.drop()
+#    collection.drop()
 
     # json style document
     # post = {
