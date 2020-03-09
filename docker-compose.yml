@@ -1,55 +1,92 @@
 version: '3.3'
 
 services:
- web:
-   container_name: "lsl-flask"
-   build: ./flask
-   tty: true
-   volumes:
-     - ./app:/app
-   ports:
-     - "5010:5001"
-   environment:
-     VIRTUAL_HOST: lsl.mimizuku.dev
-     LETSENCRYPT_HOST: lsl.mimizuku.dev
-     LETSENCRYPT_EMAIL: whiterythronium@gmail.com
-   restart: always
+  web:
+    container_name: "lsl-flask"
+    build: ./flask
+    tty: true
+    volumes:
+      - ./app:/app
+      - ./env:/app/env
+    ports:
+      - "5010:5001"
+    env_file: .env
+#   environment:
+#     VIRTUAL_HOST: sample.com
+#     LETSENCRYPT_HOST: sample.com
+#     LETSENCRYPT_EMAIL: youremail@test.local
+    depends_on:
+      - mongo # for connection of mongoDB
+    restart: always
 
- db:
-   image: mariadb:latest
-   container_name: "lsl-db"
-   volumes:
-     - ./db:/var/lib/mysql
-     - ./initdb.d:/docker-entrypoint-initdb.d
-   ports:
-     - "3326:3306"
-   environment:
-      - MYSQL_ROOT_PASSWORD=rootpass
+  mariadb:
+    image: mariadb:latest
+    container_name: "lsl-mariadb"
+    volumes:
+      - ./mariadb:/var/lib/mysql
+      - ./initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3326:3306"
+    env_file: ./env/.mariaEnv
 
- api:
-   container_name: "lsl-api"
-   build: ./node
-   restart: unless-stopped
-   volumes:
-     - ./app/node:/app/node
-   working_dir: /app/node
-   ports:
-     - "3021:3000"
-   command: sh -c "npm install -g pm2 && npm install && pm2-runtime app.js --watch"
+  api:
+    container_name: "lsl-api"
+    build: ./node
+    restart: unless-stopped
+    volumes:
+      - ./app/node:/app/node
+    working_dir: /app/node
+    ports:
+      - "3021:3000"
+    command: sh -c "npm install -g pm2 && npm install && pm2-runtime app.js --watch"
 
- phpmyadmin:
-   image: phpmyadmin/phpmyadmin
-   container_name: "lsl-db-admin"
-   links:
-     - db
-   ports:
-     - 8088:80
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "lsl-mariadb-admin"
+    links:
+      - mariadb
+    ports:
+      - 8088:80
 #   depends_on:
-#     - db
-   volumes:
-     - ./phpmyadmin/sessions:/sessions
+#     - mariadb
+    volumes:
+      - ./phpmyadmin/sessions:/sessions
+
+  mongo:
+    image: 'mongo:latest'
+    container_name: "lsl-mongoDB"
+    env_file: ./env/.mongoEnv
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $${ENV_MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: $${ENV_MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: $${ENV_MONGO_INITDB_DATABASE}
+    ports:
+      - '27017:27017'
+    volumes:
+      - 'mongodb-data:/data/db'
+    command: mongod --port 27017
+
+  mongo-express:
+    container_name: lsl-mongo-express
+    depends_on:
+      - mongo
+    ports:
+      - '8181:8081'
+    env_file: ./env/.mongoExpEnv
+    environment:
+      ME_CONFIG_OPTIONS_EDITORTHEME:  ambiance
+      ME_CONFIG_MONGODB_SERVER: mongo
+#      ME_CONFIG_MONGODB_ENABLE_ADMIN: false
+#     - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
+#     - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
+    image: mongo-express
+#    command: env
 
 networks:
   default:
     external:
       name: common_link
+
+volumes:
+  mongodb-data: {}
+

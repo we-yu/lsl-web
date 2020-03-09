@@ -18,7 +18,9 @@ RUN pip install --upgrade pip
 RUN pip install flask \
                 mysql-connector-python \
                 pymongo \
+                python-dotenv \
                 requests \
                 bs4
 # execute at "docker run"
-#CMD ["python", "frame_app.py"]
+CMD ["python", "frame_app.py"]
+# ABCDEF
