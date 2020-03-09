@@ -1,12 +1,13 @@
-import DBController
+# import DBController
+import DBStateController
 import IconScraper
 
 import string
 import re # 正規表現
-from pprint import pprint
-
 
 from pprint import pprint
+from Logger import Logger
+from Logger import ListLogger
 
 class ControlManager:
     STICKER_FIXED_URL = 'https://store.line.me/stickershop/product/%s/en'
@@ -34,20 +35,49 @@ class ControlManager:
         self.__instances    = {}
         self.__objects      = {}
 
-        self.instances  = ('dbCtrl',    DBController.DBCtrl)
         self.instances  = ('scrp',      IconScraper.IconScraper)
+        # self.instances  = ('dbCtrl',    DBController.DBCtrl)
+        #
+        # self.objects    = ('dbCtrl', self.instances['dbCtrl']())
 
-        self.objects    = ('dbCtrl', self.instances['dbCtrl']())
+        # # DB State Select
+        self.instances  = ('DBState', DBStateController.DBContext)
+        self.objects    = ('DBState', self.instances['DBState']())
+        self.objects['DBState'].change_state("mongodb")
 
     def GetParentIDs(self):
         parentIDs = []
 
+        inquery = {
+            "collection": "sticker_list",
+            "projection": {
+                "id": 1,
+                "title": 1
+            },
+            "selection": {},
+            "sort": {
+                "key": "title",
+                "direction": 1
+            },
+            "limit": 0
+        }
+
+        Logger("Inquery =", inquery)
+        mongoRet = self.objects['DBState'].Read(inquery)
+        result = []
+        for find in mongoRet:
+            result.append((find["id"], find["title"]))
+
+        # for r in result:
+        #     Logger(r)
+        
         # Execute query, Get all parentIDs from table
-        query = 'SELECT id, title FROM sticker_list ORDER BY title'
-        result = self.objects['dbCtrl'].Read(query)
+        # query = 'SELECT id, title FROM sticker_list ORDER BY title'
+        # result = self.objects['dbCtrl'].Read(query)
 
         # Loop executed result. Make list of {id, title} dictionaries.
         for sticker in result :
+            # Logger(sticker)
             stinfo = {}
             stinfo["id"] = sticker[0]
             stinfo["title"] = sticker[1]
@@ -100,13 +130,40 @@ class ControlManager:
             accLine = {'id': -1, 'title': "", 'class': 'accordion-end'}
             newStList.append(accLine)
 
-        pprint(newStList)
+        ListLogger(newStList)
         return newStList
 
     def GetLocalIDs(self, parentID):
+
+        inquery = {
+            "collection": "sticker_detail",
+            "selection": {
+                "id.parent": parentID
+            },
+            "projection": {
+                "id.child":1
+            },
+            "sort": {
+                "key": "id.child",
+                "direction": 1
+            },
+            "limit": 0
+        }
+
+        mongoRet = self.objects['DBState'].Read(inquery)
+        # Logger("MongoDB Result ↓")
+        result = []
+        for find in mongoRet:
+            result.append((find["id"]["child"],))
+            # Logger("Mongo Find :", find)
+
         # Execute query. Get all of "local id" from "detail" table.
         query = 'SELECT local_id FROM sticker_detail WHERE parent_id=%s ORDER BY local_id' % (parentID)
-        result = self.objects['dbCtrl'].Read(query)
+        # result = self.objects['dbCtrl'].Read(query)
+        # for find in result:
+        #     Logger("SQL Find :", find)
+
+        # Logger("SQL Result =", result)
 
         # Make list in list. Every 4 times change line.
         # [[1, 2, 3, 4], [5, 6, 7, 8] ...]
@@ -129,9 +186,22 @@ class ControlManager:
 
     # Check that Sticker already downloaded and registered in DB
     def IsAlreadyInDB(self, parentID):
-        query = 'SELECT count(id) FROM sticker_list WHERE id=%s' % parentID
-        result = self.objects['dbCtrl'].Read(query, 'count')
-        return True if result == 1 else False
+        inquery = {
+            "collection": "sticker_list",
+            "selection": {
+                "id": parentID
+            },
+            "count": 1
+        }
+
+        listCount = self.objects['DBState'].Read(inquery)
+
+        return bool(listCount)
+
+    # def IsAlreadyInDB(self, parentID):
+    #     query = 'SELECT count(id) FROM sticker_list WHERE id=%s' % parentID
+    #     result = self.objects['dbCtrl'].Read(query, 'count')
+    #     return True if result == 1 else False
 
     def CookYummySoup(self, parentID):
         # Make target url from fixed url + input parent ID
@@ -159,23 +229,84 @@ class ControlManager:
 
             iconInfos = scraper.GetAllIconURL()
 
+            inserts = []
+
             for iconInfo in iconInfos :
+                # Create list for SQL
                 val4detail = (parentID, iconInfo['id'], iconInfo['staticUrl'], iconInfo['fbStaticUrl'], iconInfo['backGroundUrl'])
                 vals4detail.append(val4detail)
-            pprint(vals4detail[0])
-            pprint(vals4detail[1])
-            pprint(vals4detail[2])
 
-            query = 'INSERT INTO sticker_list VALUES(%s, \'%s\', \'%s\', \'%s\')' % (vals4list[0], vals4list[1], vals4list[2], vals4list[3])
-            self.objects['dbCtrl'].Create(query)
-            query = 'INSERT INTO sticker_detail VALUES (?, ?, ?, ?, ?)'
-            self.objects['dbCtrl'].Create(query, vals4detail, 'many')
+                # Create list for MongoDB
+                detail_dic = {
+                    "id": {
+                        "parent": int(parentID),
+                        "child": int(iconInfo['id'])
+                    },
+                    "iconUrl": {
+                        "L": iconInfo['staticUrl'],
+                        "M": iconInfo['fbStaticUrl'],
+                        "S": iconInfo['backGroundUrl']
+                    }
+                }
+
+                inserts.append(detail_dic)
+
+            # pprint(vals4detail[0])
+            # pprint(vals4detail[1])
+            # pprint(vals4detail[2])
+
+            inquery_list = {
+                "collection": "sticker_list",
+                "insert": [
+                    {
+                        "id":       int(vals4list[0]),
+                        "url":      vals4list[1],
+                        "title":    vals4list[2],
+                        "comment":  vals4list[3]
+                    }
+                ]
+            }
+
+            Logger("List Inquery =", inquery_list)
+            # Logger("type", type(inquery_list["insert"][0]["id"]))
+
+            inquery_detail = {
+                "collection": "sticker_detail",
+                "insert": inserts
+            }
+
+            Logger("Detail Inquery =", inquery_detail)
+            # Logger("type 0", type(inquery_detail["insert"][0]["id"]["parent"]), type(inquery_detail["insert"][0]["id"]["child"]))
+
+            result = self.objects['DBState'].Create(inquery_list)
+            Logger("Insert List Count =", len(result))
+            result = self.objects['DBState'].Create(inquery_detail)
+            Logger("Insert Detail Count =", len(result))
+
+            # query = 'INSERT INTO sticker_list VALUES(%s, \'%s\', \'%s\', \'%s\')' % (vals4list[0], vals4list[1], vals4list[2], vals4list[3])
+            # self.objects['dbCtrl'].Create(query)
+            # query = 'INSERT INTO sticker_detail VALUES (?, ?, ?, ?, ?)'
+            # self.objects['dbCtrl'].Create(query, vals4detail, 'many')
 
             optMsg = vals4list[2]
 
         return isValid, optMsg
 
     def GetStickerTitle(self, parentID):
-        query = 'SELECT title FROM sticker_list WHERE id = %s' % parentID
-        titleTxt = self.objects['dbCtrl'].Read(query)
-        return titleTxt[0][0]
+
+        inquery = {
+            "collection": "sticker_list",
+            "selection": {
+                "id": parentID
+            },
+            "projection": {
+                "title":1
+            }
+        }
+
+        mongoRet = self.objects['DBState'].Read(inquery)
+        return mongoRet[0]["title"]
+
+        # query = 'SELECT title FROM sticker_list WHERE id = %s' % parentID
+        # titleTxt = self.objects['dbCtrl'].Read(query)
+        # return titleTxt[0][0]

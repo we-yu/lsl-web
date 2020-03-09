@@ -69,6 +69,12 @@ class DBCtrl:
         co.close()
 
         return dbResult
+    def ReadMongo(self, query, type=None):
+        dbResult = ""
+
+
+
+        return dbResult
 
     def Update(self):
         return

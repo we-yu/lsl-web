@@ -103,6 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+_*.py
+*.bak
 *.db
 db/
 mariadb/

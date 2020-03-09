@@ -174,7 +174,11 @@ count = 0
 dbName = "lslMongoDB"
 #--------------------------------------------------------------
 tableName = "sticker_list"
-migratedDB, listCol = MigrateFromSQLtoMongoDB(dbName, tableName)
+# migratedDB, listCol = MigrateFromSQLtoMongoDB(dbName, tableName)
+
+lslClient = GetMongoDBClient()
+lsldb = lslClient[dbName]
+listCol = lsldb[tableName]
 
 print("==Find Collection Migrated : %s==" % tableName)
 finds = listCol.find()
@@ -191,7 +195,11 @@ print()
 
 #--------------------------------------------------------------
 tableName = "sticker_detail"
-migratedDB, detailCol = MigrateFromSQLtoMongoDB(dbName, tableName)
+# migratedDB, detailCol = MigrateFromSQLtoMongoDB(dbName, tableName)
+
+lslClient = GetMongoDBClient()
+lsldb = lslClient[dbName]
+detailCol = lsldb[tableName]
 
 print("==Find Collection Migrated : %s==" % tableName)
 finds = detailCol.find()
