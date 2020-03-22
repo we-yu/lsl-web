@@ -47,4 +47,5 @@ body.rightFrame {
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: right bottom;
+	background-size: 50% auto;
 }

@@ -110,3 +110,5 @@ db/
 mariadb/
 app/node/
 node/
+mongodb-data/
+phpmyadmin/

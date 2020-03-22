@@ -10,6 +10,7 @@ import json
 from pprint import pprint
 
 from Logger import Logger
+from Logger import ListLogger
 
 DB_NAME = setting.mongoName
 DB_USER = setting.mongoUser
@@ -55,8 +56,9 @@ class MongoDBController():
         # "@mongo" = Depend on Container define. (not "container_name")
         accessor = "mongodb://%s:%s@mongo:%s/" % (mongoUsr, mongoPass, mongoPort)
 
-        # Logger(accessor)
+        Logger("accessor =", accessor)
         client = MongoClient(accessor)
+        Logger("client =", client)
 
         return client
 
@@ -74,6 +76,8 @@ class MongoDBController():
 
         # Connecting to target collection (From collection name)
         lslCol = self.GetTargetCollection(q["collection"])
+
+        Logger("lslCol", lslCol)
 
         # Select Query for MongoDB
         # If key not defined, Use empty/0 value.
@@ -96,6 +100,10 @@ class MongoDBController():
             finds = finds.sort(sort_query)
 
         # Convert from Cursor to List
+        # Logger("Finds a =")
+        # for find in finds:
+        #     pprint(find)
+
         retVal = list(finds)
 
         # If this query is for counting, Return only counted amount
