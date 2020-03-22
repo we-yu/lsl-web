@@ -62,7 +62,6 @@ class ControlManager:
             "limit": 0
         }
 
-        Logger("Inquery =", inquery)
         mongoRet = self.objects['DBState'].Read(inquery)
         result = []
         for find in mongoRet:
@@ -83,6 +82,9 @@ class ControlManager:
             stinfo["title"] = sticker[1]
             stinfo["class"] = ""
             parentIDs.append(stinfo)
+
+        Logger("parentIDs =")
+        ListLogger(parentIDs)
 
         return parentIDs
 

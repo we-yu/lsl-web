@@ -19,7 +19,7 @@ services:
       - mongo # for connection of mongoDB
     restart: always
 
-  mariadb:
+  mariadbSet:
     image: mariadb:latest
     container_name: "lsl-mariadb"
     volumes:
@@ -28,6 +28,8 @@ services:
     ports:
       - "3326:3306"
     env_file: ./env/.mariaEnv
+    environment:
+      - MYSQL_ROOT_PASSWORD=xxyyzz
 
   api:
     container_name: "lsl-api"
@@ -43,43 +45,44 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: "lsl-mariadb-admin"
+    env_file: ./env/.phpmyadEnv
     links:
-      - mariadb
+      - mariadbSet
     ports:
-      - 8088:80
+      - 8089:80
 #   depends_on:
 #     - mariadb
     volumes:
       - ./phpmyadmin/sessions:/sessions
+      - ./phpmyadmin/var_www_html:/var/www/html
 
   mongo:
-    image: 'mongo:latest'
+    image: 'mongo:4.2.3-bionic'
     container_name: "lsl-mongoDB"
     env_file: ./env/.mongoEnv
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: $${ENV_MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: $${ENV_MONGO_INITDB_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: $${ENV_MONGO_INITDB_DATABASE}
+#    environment:
+#       MONGO_INITDB_ROOT_USERNAME: ${ENV_MONGO_INITDB_ROOT_USERNAME}
+#       MONGO_INITDB_ROOT_PASSWORD: ${ENV_MONGO_INITDB_ROOT_PASSWORD}
+#       MONGO_INITDB_DATABASE: ${ENV_MONGO_INITDBNAME}
     ports:
-      - '27017:27017'
+      - 27017:27017
     volumes:
-      - 'mongodb-data:/data/db'
-    command: mongod --port 27017
+      - ./mongodb-data:/data/db
+      - ./mongo/initdb.d/:/docker-entrypoint-initdb.d
+#    command: mongod --port 27017
 
   mongo-express:
+    image: mongo-express
     container_name: lsl-mongo-express
     depends_on:
       - mongo
     ports:
       - '8181:8081'
     env_file: ./env/.mongoExpEnv
-    environment:
-      ME_CONFIG_OPTIONS_EDITORTHEME:  ambiance
-      ME_CONFIG_MONGODB_SERVER: mongo
+#    environment:
 #      ME_CONFIG_MONGODB_ENABLE_ADMIN: false
 #     - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
 #     - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
-    image: mongo-express
 #    command: env
 
 networks:

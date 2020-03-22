@@ -5,6 +5,7 @@ import SQLiteController
 # Working by State pattern.
 from pprint import pprint
 from Logger import Logger
+from Logger import ListLogger
 
 # Context class
 class DBContext:
@@ -134,31 +135,43 @@ def ReadTest(obj):
     # obj.Delete(query)
     # --------------------
     Logger("---")
-    Logger("---")
-    Logger("---")
+    # inquery = {
+    #     "collection": "sticker_detail",
+    #     "projection": {
+    #         "_id":0
+    #         # ,"id.child":1
+    #         # ,"id.parent":1
+    #     },
+    #     "selection": {
+    #         "id.parent":1252985
+    #     },
+    #     "sort": {
+    #         "key":"id.child",
+    #         "direction":-1
+    #
+    #     },
+    #     "limit": 5
+    # }
 
     inquery = {
-        "collection": "sticker_detail",
+        "collection": "sticker_list",
         "projection": {
-            "_id":0
-            # ,"id.child":1
-            # ,"id.parent":1
+            "id": 1,
+            "title": 1
         },
-        "selection": {
-            "id.parent":1162635
-        },
+        "selection": {},
         "sort": {
-            "key":"id.child",
-            "direction":-1
-
+            "key": "title",
+            "direction": 1
         },
-        "limit": 5
+        "limit": 0
     }
-    Logger("inquery =", type(inquery))
+
+    # Logger("inquery =", type(inquery))
 
     query = "baabaa"
     finds = obj.Read(inquery)
-
+    Logger("Read test result")
     for find in finds:
         pprint(find)
 
@@ -214,7 +227,7 @@ def CountTest(obj):
     inquery = {
         "collection": "sticker_detail",
         "selection": {
-            "id.parent":8173575
+            "id.parent":1206683
         },
         "count": 1
     }
@@ -278,11 +291,11 @@ def main():
 
     # --------------------
     # CreateTest(ctxObj)
-    # ReadTest(ctxObj)
+    ReadTest(ctxObj)
     # UpdateTest(ctxObj)
     # DeleteTest(ctxObj)
 
-    CountTest(ctxObj)
+    # CountTest(ctxObj)
     # Logger("1293651 is Exist? ", IsExistInDB(ctxObj, 1293651))
     # Logger("5858634 is Exist? ", IsExistInDB(ctxObj, 5858634))
     # CreateBulkTest(ctxObj)
