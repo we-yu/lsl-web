@@ -181,13 +181,51 @@ class ControlManager:
 
         return localid_list
 
+    def StickerFetching(self, req):
+        Logger("Req = ", req, req.method)
+
+        validate = True
+        # Method check, If it is "POST". Allowed.
+        validate = (req.method == "POST") if (validate == True) else False
+        if (validate == True) :
+            stickerID = str(req.form["url_post_text"])
+            isValid, msg = self.ValidationID(stickerID)
+        else :
+            isValid = False
+            msg = ""
+
+        if (isValid) :
+            # Valid page check
+            isValid, msg = self.CookYummySoup(stickerID) if (validate == True) else (False, msg)
+            Logger("Cook soup", isValid, msg)
+
+        return isValid, msg
+
+    def ValidationID(self, stickerID):
+
+        validate = True
+
+        # Numeric check
+        validate, msg = self.IsNumeric(stickerID) if (validate == True) else (False, False)
+        Logger("Numeric check", validate, msg)
+
+        stickerID = int(stickerID)
+
+        # Duplicate check
+        validate, msg = self.IsDuplicate(stickerID) if (validate == True) else (False, msg)
+
+        Logger("Duplicate check", validate, type(validate), msg)
+
+        return validate, msg
+
     # To new register, Input sticker-ID.
     # https://store.line.me/stickershop/product/1206683/en => 1206683 is sticker-ID
     def IsNumeric(self, val):
-        return re.match(r"^\d+$", val) is not None
+        isValid = re.match(r"^\d+$", val) is not None
+        msg = "<font color=\"red\"><b>%s</b> is invalid. Allow only numeric.</font>" % (val)
+        return (isValid, msg)
 
-    # Check that Sticker already downloaded and registered in DB
-    def IsAlreadyInDB(self, parentID):
+    def IsDuplicate(self, parentID):
         inquery = {
             "collection": "sticker_list",
             "selection": {
@@ -197,8 +235,10 @@ class ControlManager:
         }
 
         listCount = self.objects['DBState'].Read(inquery)
+        Logger("ListCount = ", listCount, type(listCount), bool(listCount))
+        msg = "<font color=\"red\"><b>%s</b> is already in DB.</font>" % (parentID)
 
-        return bool(listCount)
+        return (not bool(listCount), msg)
 
     # def IsAlreadyInDB(self, parentID):
     #     query = 'SELECT count(id) FROM sticker_list WHERE id=%s' % parentID
@@ -280,17 +320,20 @@ class ControlManager:
             Logger("Detail Inquery =", inquery_detail)
             # Logger("type 0", type(inquery_detail["insert"][0]["id"]["parent"]), type(inquery_detail["insert"][0]["id"]["child"]))
 
-            result = self.objects['DBState'].Create(inquery_list)
-            Logger("Insert List Count =", len(result))
-            result = self.objects['DBState'].Create(inquery_detail)
-            Logger("Insert Detail Count =", len(result))
+            # result = self.objects['DBState'].Create(inquery_list)
+            # Logger("Insert List Count =", len(result))
+            # result = self.objects['DBState'].Create(inquery_detail)
+            # Logger("Insert Detail Count =", len(result))
 
             # query = 'INSERT INTO sticker_list VALUES(%s, \'%s\', \'%s\', \'%s\')' % (vals4list[0], vals4list[1], vals4list[2], vals4list[3])
             # self.objects['dbCtrl'].Create(query)
             # query = 'INSERT INTO sticker_detail VALUES (?, ?, ?, ?, ?)'
             # self.objects['dbCtrl'].Create(query, vals4detail, 'many')
 
-            optMsg = vals4list[2]
+            fetchedTitle = vals4list[2]
+            optMsg = "<font color=\"blue\">Sticker [<b>%s</b>] succeeded to fetching</font>" % (fetchedTitle)
+        else:
+            optMsg = "<font color=\"red\">Sticker <b>%s</b> could not found.</font>" % (parentID)
 
         return isValid, optMsg
 
