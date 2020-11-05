@@ -49,3 +49,13 @@ body.rightFrame {
 	background-position: right bottom;
 	background-size: 50% auto;
 }
+
+#howto
+{
+	display:none;
+}
+
+table.howtouse tr td
+{
+	font-size: 9px;
+}

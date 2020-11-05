@@ -320,10 +320,10 @@ class ControlManager:
             Logger("Detail Inquery =", inquery_detail)
             # Logger("type 0", type(inquery_detail["insert"][0]["id"]["parent"]), type(inquery_detail["insert"][0]["id"]["child"]))
 
-            # result = self.objects['DBState'].Create(inquery_list)
-            # Logger("Insert List Count =", len(result))
-            # result = self.objects['DBState'].Create(inquery_detail)
-            # Logger("Insert Detail Count =", len(result))
+            result = self.objects['DBState'].Create(inquery_list)
+            Logger("Insert List Count =", len(result))
+            result = self.objects['DBState'].Create(inquery_detail)
+            Logger("Insert Detail Count =", len(result))
 
             # query = 'INSERT INTO sticker_list VALUES(%s, \'%s\', \'%s\', \'%s\')' % (vals4list[0], vals4list[1], vals4list[2], vals4list[3])
             # self.objects['dbCtrl'].Create(query)
