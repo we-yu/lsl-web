@@ -253,7 +253,7 @@ class ControlManager:
         scraper = self.objects['scrp']
 
         # Check this URL is available or not.
-        isValid = scraper.IsVaild()
+        isValid, errMsg = scraper.IsValid()
 
         # Optional messages to return
         optMsg = ""
@@ -334,6 +334,8 @@ class ControlManager:
             optMsg = "<font color=\"blue\">Sticker [<b>%s</b>] succeeded to fetching</font>" % (fetchedTitle)
         else:
             optMsg = "<font color=\"red\">Sticker <b>%s</b> could not found.</font>" % (parentID)
+            errMsg_Formatted = "<pre>" + errMsg + "</pre>"
+            optMsg = optMsg + errMsg_Formatted + "<hr>"
 
         return isValid, optMsg
 
