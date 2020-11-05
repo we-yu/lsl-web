@@ -5,7 +5,7 @@ import re
 import json
 
 STICKER_LIST_CLASS  = 'FnStickerList'
-UNVLAID_PAGE_MARK   = 'lyMainError'
+UNVALID_PAGE_MARK   = 'lyMainError'
 
 class IconScraper :
     #   Setting property -------------------------------
@@ -56,13 +56,24 @@ class IconScraper :
         # self.topId = self.GetStickerTopID()
 
     # If there is text of "UNVALID_PAGE_MARK" in page, You got error page.
-    def IsVaild(self):
+    def IsValid(self):
         contentsStr = str(self.soup)
+
+        errMsg = ""
 
         # ogContent = self.soup.find('meta', {"property":"og:url"})['content']
         # print("ogContent = ", ogContent)
 
-        return True if UNVLAID_PAGE_MARK not in contentsStr else False
+        isValid = True if UNVALID_PAGE_MARK not in contentsStr else False
+
+        # In case of Error page opened
+        if (isValid == False) :
+            # Get Error message.
+            errMsg = self.soup.find('p', class_="mdMN05Txt")
+            errMsg = errMsg.getText()
+            print("errMsg = ", errMsg)
+
+        return isValid, errMsg
 
     def GetAllIconURL(self):
         # print('Call ' + sys._getframe().f_code.co_name)
