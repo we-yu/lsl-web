@@ -71,7 +71,6 @@ class IconScraper :
             # Get Error message.
             errMsg = self.soup.find('p', class_="mdMN05Txt")
             errMsg = errMsg.getText()
-            print("errMsg = ", errMsg)
 
         return isValid, errMsg
 
