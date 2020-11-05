@@ -216,7 +216,7 @@ def CountTest(obj):
     inquery = {
         "collection": "sticker_list",
         "selection": {
-            "id":8173575
+            "id":8258699
         },
         "count": 1
     }
@@ -227,7 +227,7 @@ def CountTest(obj):
     inquery = {
         "collection": "sticker_detail",
         "selection": {
-            "id.parent":1206683
+            "id.parent":8258699
         },
         "count": 1
     }
@@ -291,11 +291,11 @@ def main():
 
     # --------------------
     # CreateTest(ctxObj)
-    ReadTest(ctxObj)
+    # ReadTest(ctxObj)
     # UpdateTest(ctxObj)
     # DeleteTest(ctxObj)
 
-    # CountTest(ctxObj)
+    CountTest(ctxObj)
     # Logger("1293651 is Exist? ", IsExistInDB(ctxObj, 1293651))
     # Logger("5858634 is Exist? ", IsExistInDB(ctxObj, 5858634))
     # CreateBulkTest(ctxObj)

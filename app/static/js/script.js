@@ -19,4 +19,10 @@ $(function () {
         $(this).next('ul').slideToggle();
     });
 
+    $("#howtobtn").click(function(){
+        $("howtoimg").toggleClass("hidden");
+    });
+
+
+    // aa
 })

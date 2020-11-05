@@ -20,5 +20,25 @@
         <div>
             {% block responses %}{% endblock %}
         </div>
+
+        <button type="button" id="c" onclick="$('#howto').toggle();">How to use</button>
+        <div id="howto">
+            <table border="1" class="howtouse">
+                <tr>
+                    <td>
+                        <ui>
+                            <li>Open Line sticker sample page. (https://store.line.me/stickershop/product/<i>foobar</i>/)</li>
+                            <li>Copy sticker ID from URL.</li>
+                            <li>Paste ID into text-box, Kick <b>GET STICKER</b> button.</li>
+                            <li>Refresh page.</li>
+                            <li>Open Initial link from left menu.</li>
+                            <li>By left-click sticker, Copy image URL to your clipboard.</li>
+                            <li>Paste somewhere. For example, Slack. If inline-link is enabled, you can see image.</li>
+                        </ui>
+                        <img src="static/image/LSL_Howtouse.gif" class="howtoimg" alt="help image" border="0" />
+                    </td>
+                </tr>
+            </table>
+        </div>
     </body>
 </html>

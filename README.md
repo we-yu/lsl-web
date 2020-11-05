@@ -1,15 +1,21 @@
 # lsl-web
 Line sticker lider on web
 
-# Description (説明)
+## What is this
+- On [Line Sticker shop](https://store.line.me/stickershop/home/general/en), There are "Sample" stickers.
+- That stickers png file. That png file's image url, you can use for image link.
+    - For example, Paste image link on Slack. If "Inline link option" is available, You can use sticker in Slack application.
 
-This repository is a small template for easily trying flask with docker-compose.  
-このリポジトリはdocker-composeでflaskを手軽に試す為の小さなテンプレートです。  
+![](img/slacksample.png)
 
-# Preparation (準備)
 
-Please install the following before using this repository.  
-このリポジトリを使う前に下記をインストールしておいてください。  
+## How to use
+
+### Get sticker link
+
+### Register new stickers
+
+
 
 - docker
 - docker-compose
