@@ -18,7 +18,7 @@ def FrameSet(id = None):
 def Top(id = None):
     isValid, receivedTxt = ctrlMng.StickerFetching(request)
 
-    return render_template('Top.html', responseMessage=receivedTxt)
+    return render_template('Top.html', responseMessage=receivedTxt, fetchResult=isValid)
 
 @app.route('/ListMenu.html')
 def ListMenu(nameTxt = None):
@@ -33,7 +33,7 @@ def IdSet(id = None):
 
     sticker_details = ctrlMng.GetLocalIDs(parentID)
 
-    pp.pprint(sticker_details)
+    # pp.pprint(sticker_details)
 
     return render_template('ListBase.html', title=titleTxt, iconList=sticker_details)
 

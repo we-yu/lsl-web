@@ -4,14 +4,17 @@
 <html lang="ja">
     <head>
         <title>Heaven or Hell</title>
-        <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+        <meta charset="UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="static/css/style.css">
     </head>
     <body>
         <div id="left">
-            <iframe src="ListMenu.html"></iframe>
+            <iframe id="leftFrame" src="ListMenu.html"></iframe>
         </div>
         <div id="right">
-            <iframe src="Top.html" name="listArea"></iframe>
+            <iframe id="rightFrame" src="Top.html" name="listArea"></iframe>
         </div>
     </body>
 </html>

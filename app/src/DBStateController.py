@@ -1,11 +1,15 @@
 import MongoDBController
 import SQLiteController
 
+import sys
+
 # DB management class
 # Working by State pattern.
 from pprint import pprint
 from Logger import Logger
 from Logger import ListLogger
+
+args = sys.argv
 
 # Context class
 class DBContext:
@@ -283,19 +287,25 @@ def Util_DeleteAllSticker(obj, parentID):
     result = obj.Delete(inquery)
     return
 
-def main():
+def main(cmd, tgtid):
     # Create context instance
     ctxObj = DBContext()
     chosenDBtype = "mongodb"
     ctxObj.change_state(chosenDBtype)
 
+    Logger("args are :", cmd, tgtid)
+    # 1786837
+
+    tgtid = int(tgtid)
+
+    Util_DeleteAllSticker(ctxObj, tgtid)
     # --------------------
     # CreateTest(ctxObj)
     # ReadTest(ctxObj)
     # UpdateTest(ctxObj)
     # DeleteTest(ctxObj)
 
-    CountTest(ctxObj)
+    # CountTest(ctxObj)
     # Logger("1293651 is Exist? ", IsExistInDB(ctxObj, 1293651))
     # Logger("5858634 is Exist? ", IsExistInDB(ctxObj, 5858634))
     # CreateBulkTest(ctxObj)
@@ -327,5 +337,18 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # Logger("args =", args)
+    # Logger(args[0], args[1], args[2])
+    # Logger(len(args))
+    if (len(args) < 3) :
+        Logger("Requres 2 arguments at least. EXIT NOW.")
+        sys.exit()
+    if (args[1] != "del" and args[1] != "delete") :
+        Logger("Now accepts only delete command")
+        sys.exit()
+    
+    command = args[1]
+    tgtID = args[2]
+
+    main(command, tgtID)
 
