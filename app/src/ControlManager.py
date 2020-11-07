@@ -333,7 +333,7 @@ class ControlManager:
             fetchedTitle = vals4list[2]
             optMsg = "<font color=\"blue\">Sticker [<b>%s</b>] succeeded to fetching</font>" % (fetchedTitle)
         else:
-            optMsg = "<font color=\"red\">Sticker <b>%s</b> could not found.</font>" % (parentID)
+            optMsg = "<font color=\"red\">Sticker [<b>%s</b>] could not found.</font>" % (parentID)
             errMsg_Formatted = "<pre>" + errMsg + "</pre>"
             optMsg = optMsg + errMsg_Formatted + "<hr>"
 

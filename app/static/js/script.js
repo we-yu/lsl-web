@@ -19,10 +19,15 @@ $(function () {
         $(this).next('ul').slideToggle();
     });
 
-    $("#howtobtn").click(function(){
-        $("howtoimg").toggleClass("hidden");
-    });
+    // $("#howtobtn").click(function(){
+    //     $("howtoimg").toggleClass("hidden");
+    // });
 
-
-    // aa
+    // Sample code. <id="button01"> component calls Alert.
+    // $("#button01").click(function(){
+    //     alert("Button clicked k");
+    //     window.parent.document.getElementById("leftFrame").contentWindow.location.reload();
+    // });
+    // <!-- <input name="btn01" id="button01" type="button" value="ボタン1"/>
+    // </br> -->
 })

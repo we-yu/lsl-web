@@ -13,10 +13,18 @@
     <form action = "Top.html" method = "POST">
     	<h3>Add Sticker</h3>
         <input type="number" name="url_post_text" size="50" minlength="3" maxlength="1000" placeholder="9876543210" required><small> ※Allow only numeric ID.</small>
-	<p><input class="button" type="submit" value="GET STICKER"></p>
+	<p><input id="fetchBtn" class="button" type="submit" value="GET STICKER"></p>
     </form>
 {% endblock %}
 {% block responses %}
+    
     {{ responseMessage | safe }}
+
+    <!-- If scraping (fetching) succeeded, Reload left (menu) window -->
+    {% if fetchResult == true %}
+        <script>
+            window.parent.document.getElementById("leftFrame").contentWindow.location.reload();
+        </script>
+    {% endif %}
 {% endblock %}
 

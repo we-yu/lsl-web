@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script type="text/javascript" src="static/js/script.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
         <link rel="stylesheet" type="text/css" href="static/css/style.css">
     </head>
     <body class="rightFrame">
@@ -21,7 +21,7 @@
             {% block responses %}{% endblock %}
         </div>
 
-        <button type="button" id="c" onclick="$('#howto').toggle();">How to use</button>
+        <button type="button" id="howtobtn" onclick="$('#howto').toggle();">How to use</button>
         <div id="howto">
             <table border="1" class="howtouse">
                 <tr>
